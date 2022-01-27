@@ -46,6 +46,26 @@
         top: 25%;
         right: 25%;
       }
+
+      .dots {
+        text-align: center;
+      }
+
+      .dot {
+        cursor: pointer;
+        height: 15px;
+        width: 15px;
+        margin: 0 2px;
+        background-color: #bbb;
+        border-radius: 50%;
+        display: inline-block;
+        transition: background-color 0.6s ease;
+      }
+
+      .active,
+      .dot:hover {
+        background-color: #717171;
+      }
     </style>
   </head>
   <body>
@@ -65,13 +85,43 @@
 
       let currentIndex = 0;
 
+      const dots = document.createElement('div');
+      const container = document.querySelector('.imageCarousel');
+      dots.classList.add('dots');
+
+      for (let i = 0; i < images.length; i++) {
+        let dot = document.createElement('span');
+        dot.classList.add('dot');
+        dot.setAttribute('id', i);
+        dots.appendChild(dot);
+      }
+      container.appendChild(dots);
+      dots.children[0].classList.add('active');
+
       //solution here
       const prevBtn = document.querySelector('#prev-button');
       const nextBtn = document.querySelector('#next-button');
 
-      const slider = btn => {
+      const showImage = index => {
+        console.log(index);
         const imgTag = document.querySelector('img');
+        imgTag.setAttribute('src', '');
+        imgTag.setAttribute('src', images[index]);
+        
+        for (let i = 0; i < dots.children.length; i++) {
+          dots.children[i].classList.remove('active');
+        }
+        dots.children[index].classList.add('active');
+      };
 
+      const showDotImage = dot => {
+        const dotIndex = dot.id;
+        console.log(dotIndex);
+
+        showImage(dotIndex);
+      };
+
+      const slider = btn => {
         if (btn === 'prev') {
           currentIndex === 0
             ? (currentIndex = images.length - 1)
@@ -83,15 +133,20 @@
             : currentIndex++;
         }
 
-        console.log(currentIndex);
-        imgTag.setAttribute('src', '');
-        imgTag.setAttribute('src', images[currentIndex]);
+        showImage(currentIndex);
       };
 
-      console.log(currentIndex);
       prevBtn.addEventListener('click', () => slider('prev'));
       nextBtn.addEventListener('click', () => slider('next'));
+
+      for (let i = 0; i < dots.children.length; i++) {
+        dots.children[i].addEventListener('click', () => {
+          showDotImage(dots.children[i]);
+        });
+      }
       //solution end here
+
+      // create dots
     </script>
   </body>
 </html>
